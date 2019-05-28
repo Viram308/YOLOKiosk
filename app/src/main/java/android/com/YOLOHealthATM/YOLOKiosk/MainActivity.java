@@ -285,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements WifiConnectorMode
                                             Log.d("password1", "" + group.getPassphrase());
                                             s = sp.getString("ssid", "0");
                                             p = sp.getString("pass", "0");
+                                            mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
                                             proxyThread.start();
                                             if (s.equals("0")) {
                                                 Editor edi = sp.edit();
@@ -329,6 +330,7 @@ public class MainActivity extends AppCompatActivity implements WifiConnectorMode
                                                             Log.d("password1", "" + group.getPassphrase());
                                                             s = sp.getString("ssid", "0");
                                                             p = sp.getString("pass", "0");
+                                                            mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
                                                             if (s.equals("0")) {
                                                                 Editor edi = sp.edit();
                                                                 edi.putString("ssid", "" + group.getNetworkName());

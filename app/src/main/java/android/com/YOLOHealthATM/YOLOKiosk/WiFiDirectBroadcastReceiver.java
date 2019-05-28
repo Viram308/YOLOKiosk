@@ -66,7 +66,7 @@ String textResult;
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] splitted = line.split(" +");
-                if (splitted != null && splitted.length >= 4) {
+                if (splitted.length >= 4) {
                     String ip = splitted[0];
                     String mac = splitted[3];
                     Log.d("mac",""+ip);
@@ -112,11 +112,7 @@ String textResult;
             // that.
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-            NetworkInfo networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-            final boolean[] connected = new boolean[1];
 
-            final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            assert connectivityManager != null;
 
 
 
@@ -144,7 +140,8 @@ String textResult;
                                             public void run() {
                                                 readAddresses(host);
                                                 textResult = "";
-                                                for (int j = 0; j < listNote.size(); j++) {
+                                                int j;
+                                                for (j = 0; j < listNote.size(); j++) {
 
                                                     textResult = listNote.get(j).toString();
 
