@@ -33,7 +33,7 @@ WebView mWebView;
 // Remember that you should never show the action bar if the
 // status bar is hidden, so hide that too if necessary.
 
-
+WebView.setWebContentsDebuggingEnabled(true);
         mWebView = (WebView) findViewById(R.id.activity_main_webview);
         String ip= getIntent().getStringExtra("ip");
         Toast.makeText(getApplicationContext(),""+ip,Toast.LENGTH_SHORT).show();
@@ -42,6 +42,11 @@ WebView mWebView;
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
         settings.setAppCacheEnabled(false);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+
         CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
         settings.setAllowFileAccessFromFileURLs(true); //Maybe you don't need this rule
         settings.setAllowUniversalAccessFromFileURLs(true);
@@ -99,21 +104,21 @@ WebView mWebView;
         }
 
     }
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_BACK:
-                    if (mWebView.canGoBack()) {
-                        mWebView.goBack();
-                    } else {
-                        finish();
-                    }
-                    return true;
-            }
-
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+//            switch (keyCode) {
+//                case KeyEvent.KEYCODE_BACK:
+//                    if (mWebView.canGoBack()) {
+//                        mWebView.goBack();
+//                    } else {
+//                        finish();
+//                    }
+//                    return true;
+//            }
+//
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 
 }

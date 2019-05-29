@@ -7,10 +7,12 @@
 package android.com.YOLOHealthATM.YOLOKiosk;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +32,11 @@ public class WifiListRvAdapter extends RecyclerView.Adapter<WifiListRvAdapter.Wi
 
     private List<ScanResult> scanResultList = new ArrayList<>();
     private WifiConnector wifiConnector;
+    private WifiManager wifiManager;
     private WifiItemListener wifiItemListener;
-    public WifiListRvAdapter(WifiConnector wifiConnector, WifiItemListener wifiItemListener) {
+    public WifiListRvAdapter(WifiConnector wifiConnector,WifiManager wifiManager, WifiItemListener wifiItemListener) {
         this.wifiConnector = wifiConnector;
+        this.wifiManager=wifiManager;
         this.wifiItemListener = wifiItemListener;
     }
 
@@ -48,7 +52,10 @@ public class WifiListRvAdapter extends RecyclerView.Adapter<WifiListRvAdapter.Wi
 
     @Override
     public void onBindViewHolder(final WifiItem holder, final int position) {
-        holder.fill(scanResultList.get(position), wifiConnector.getCurrentWifiSSID());
+
+        Log.d("Current",""+wifiConnector.getCurrentWifiSSID());
+        holder.fill(scanResultList.get(position), wifiManager.getConnectionInfo().getSSID());
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +100,8 @@ public class WifiListRvAdapter extends RecyclerView.Adapter<WifiListRvAdapter.Wi
 
         @SuppressLint("SetTextI18n")
         public void fill(ScanResult scanResult, String currentSsid) {
-            if (scanResult.SSID.equals(currentSsid)) {
+            String s="\""+scanResult.SSID+"\"";
+            if (s.equals(currentSsid)) {
                 wifiName.setTextColor(Color.GREEN);
             }
             wifiName.setText(scanResult.SSID);

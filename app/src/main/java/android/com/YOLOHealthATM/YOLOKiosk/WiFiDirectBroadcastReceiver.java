@@ -114,8 +114,8 @@ String textResult;
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
 
-
-
+textResult="";
+listNote.clear();
                     mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
 
                         @Override
