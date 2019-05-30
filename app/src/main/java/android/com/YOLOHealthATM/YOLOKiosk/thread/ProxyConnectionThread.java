@@ -7,12 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-
-
-/**
- * @author shinilms
- */
-
 public final class ProxyConnectionThread extends Thread {
 
     private Socket socket;
@@ -50,6 +44,7 @@ public final class ProxyConnectionThread extends Thread {
                                 outputStream1 = socket.getOutputStream();
                                 final InputStream finalInputStream = inputStream;
                                 final OutputStream finalOutputStream = outputStream1;
+
                                 new Thread(this) {
                                     public final void run() {
                                         readWrite(finalInputStream, finalOutputStream);
@@ -87,6 +82,7 @@ public final class ProxyConnectionThread extends Thread {
                     }
                     this.socket.close();
                 }
+
                 try {
                     Socket socket2 = new Socket(ParseRequest.url, ParseRequest.port);
                     try {

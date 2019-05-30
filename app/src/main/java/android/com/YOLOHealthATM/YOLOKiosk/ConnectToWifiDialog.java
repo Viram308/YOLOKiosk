@@ -22,12 +22,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * ConnectToWifiDialog
- *
- * @author Jose Flavio - jflavio90@gmail.com
- * @since 10/2/17
- */
 public class ConnectToWifiDialog extends Dialog implements View.OnClickListener {
 
     private TextView wifiName;

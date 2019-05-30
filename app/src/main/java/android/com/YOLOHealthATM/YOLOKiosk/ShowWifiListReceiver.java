@@ -45,52 +45,52 @@ if(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction())) {
 
         List<ScanResult> wifiScanResult = this.wifiConnector.getWifiManager().getScanResults();
         int scanSize = wifiScanResult.size();
-scanSize--;
+        scanSize--;
 
         wifiLog("Showwifireceiver action:  " + intent.getAction());
         wifiLog("Scansize: " + scanSize);
-        if (scanSize >= 0) {
-            this.wifiConnector.getShowWifiListListener().onNetworksFound(this.wifiConnector.getWifiManager(), wifiScanResult);
-            while (scanSize >= 0) {
+            if (scanSize >= 0) {
+                this.wifiConnector.getShowWifiListListener().onNetworksFound(this.wifiConnector.getWifiManager(), wifiScanResult);
+                while (scanSize >= 0) {
 
-                if (!wifiScanResult.get(scanSize).SSID.isEmpty()) {
-                    /**
-                     * individual wifi item information
-                     */
-                    JSONObject wifiItem = new JSONObject();
+                    if (!wifiScanResult.get(scanSize).SSID.isEmpty()) {
+                        /**
+                         * individual wifi item information
+                         */
+                        JSONObject wifiItem = new JSONObject();
 
-                    wifiItem.put("SSID", wifiScanResult.get(scanSize).SSID);
-                    wifiItem.put("BSSID", wifiScanResult.get(scanSize).BSSID);
-                    wifiItem.put("INFO", wifiScanResult.get(scanSize).capabilities);
+                        wifiItem.put("SSID", wifiScanResult.get(scanSize).SSID);
+                        wifiItem.put("BSSID", wifiScanResult.get(scanSize).BSSID);
+                        wifiItem.put("INFO", wifiScanResult.get(scanSize).capabilities);
 
-                    /**
-                     * this check if device has a current WiFi connection
-                     */
-                    if (wifiScanResult.get(scanSize).BSSID.equals(this.wifiConnector.getWifiManager().getConnectionInfo().getBSSID())) {
-                        wifiItem.put("CONNECTED", true);
-                        this.wifiConnector.setCurrentWifiSSID(wifiScanResult.get(scanSize).SSID);
-                        this.wifiConnector.setCurrentWifiBSSID(wifiScanResult.get(scanSize).BSSID);
-                    } else {
-                        wifiItem.put("CONNECTED", false);
+                        /**
+                         * this check if device has a current WiFi connection
+                         */
+                        if (wifiScanResult.get(scanSize).BSSID.equals(this.wifiConnector.getWifiManager().getConnectionInfo().getBSSID())) {
+                            wifiItem.put("CONNECTED", true);
+                            this.wifiConnector.setCurrentWifiSSID(wifiScanResult.get(scanSize).SSID);
+                            this.wifiConnector.setCurrentWifiBSSID(wifiScanResult.get(scanSize).BSSID);
+                        } else {
+                            wifiItem.put("CONNECTED", false);
+                        }
+                        wifiItem.put("SECURITY_TYPE", WifiConnector.getWifiSecurityType(wifiScanResult.get(scanSize)));
+                        wifiItem.put("LEVEL", WifiManager.calculateSignalLevel(wifiScanResult.get(scanSize).level, 100) + "%");
+
+                        wifiList.put(wifiItem);
                     }
-                    wifiItem.put("SECURITY_TYPE", WifiConnector.getWifiSecurityType(wifiScanResult.get(scanSize)));
-                    wifiItem.put("LEVEL", WifiManager.calculateSignalLevel(wifiScanResult.get(scanSize).level, 100) + "%");
 
-                    wifiList.put(wifiItem);
+                    scanSize--;
                 }
 
-                scanSize--;
+                this.wifiConnector.getShowWifiListListener().onNetworksFound(wifiList);
+
+                } else {
+                    this.wifiConnector.getShowWifiListListener().errorSearchingNetworks(WifiConnector.NO_WIFI_NETWORKS);
             }
 
-            this.wifiConnector.getShowWifiListListener().onNetworksFound(wifiList);
-
-        } else {
-            this.wifiConnector.getShowWifiListListener().errorSearchingNetworks(WifiConnector.NO_WIFI_NETWORKS);
-        }
-
-    } catch (JSONException e) {
-        e.printStackTrace();
-        this.wifiConnector.getShowWifiListListener().errorSearchingNetworks(WifiConnector.UNKOWN_ERROR);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            this.wifiConnector.getShowWifiListListener().errorSearchingNetworks(WifiConnector.UNKOWN_ERROR);
     }
 
     this.wifiConnector.unregisterShowWifiListListener();

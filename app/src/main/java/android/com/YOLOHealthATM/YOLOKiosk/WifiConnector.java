@@ -528,6 +528,7 @@ public class WifiConnector {
     }
 
     // TODO show reason to remove failure!
+
     public void removeWifiNetwork(String SSID, String BSSID) {
         Log.d("info","SSID :- "+SSID+"cureent"+getCurrentWifiSSID());
         List<WifiConfiguration> list1 = wifiManager.getConfiguredNetworks();

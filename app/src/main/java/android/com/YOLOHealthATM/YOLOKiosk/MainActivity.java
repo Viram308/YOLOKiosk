@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements WifiConnectorMode
     List<android.net.wifi.ScanResult> wifiList;
     RecyclerView wifiRecyclerView;
     WifiViewHolder wifiViewHolder;
-static int flag=0;
+    static int flag=0;
     String[] s1;
     private StartProxyThread proxyThread;
     Button scanWifiBtn, inet;
@@ -552,6 +552,7 @@ if(flag==1)
                 wifi.setWifiEnabled(true);
             }
             mmint.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+
             LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             assert layoutInflater != null;
             View layout = layoutInflater.inflate(R.layout.popup, null);
@@ -596,11 +597,10 @@ if(flag==1)
                     disconnectFromAccessPoint(scanResult);
                 }
             });
+
             LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
             wifiRecyclerView.setLayoutManager(layoutManager);
-
             wifiRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
             wifiRecyclerView.setAdapter(adapter);
             wifiRecyclerView.setHasFixedSize(true);
 
