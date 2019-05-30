@@ -66,6 +66,7 @@ String textResult;
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] splitted = line.split(" +");
+                Log.d("line",""+line);
                 if (splitted.length >= 4) {
                     String ip = splitted[0];
                     String mac = splitted[3];
@@ -80,16 +81,18 @@ String textResult;
             }
 
         } catch (FileNotFoundException e) {
+            Log.d("jj","jj");
             e.printStackTrace();
         } catch (IOException e) {
+            Log.d("jj","jj");
             e.printStackTrace();
-        } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        }//         finally {
+//            try {
+//                bufferedReader.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Override
@@ -113,7 +116,6 @@ String textResult;
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
-
                 textResult="";
                 listNote.clear();
                     mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
@@ -135,10 +137,14 @@ String textResult;
                                             host = list.get(i).deviceAddress;
                                             Log.d("hostmac", "" + host);
                                         }
+                                        Log.d("hostmac", "" + host);
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                readAddresses(host);
+
+
+                                        readAddresses(host);
+
                                                 textResult = "";
                                                 int j;
                                                 for (j = 0; j < listNote.size(); j++) {
@@ -152,18 +158,22 @@ String textResult;
 //                                                        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 //                                                        connected[0] = activeNetworkInfo != null && activeNetworkInfo.isConnected();
 //                                                    } while (!connected[0]);
+
+
                                                     Intent intent = new Intent(context, Webvie.class);
                                                     intent.putExtra("ip", textResult);
                                                     context.startActivity(intent);
+
+
                                                 }
                                             }
-                                        }, 1000);
-
+                                        },1000);
 
                                     }
                                 });
                             }
                         }
+
                     });
 
                 // Connection state changed! We should probably do something about

@@ -2,6 +2,7 @@ package android.com.YOLOHealthATM.YOLOKiosk;
 
 import android.annotation.SuppressLint;
 import android.net.http.SslError;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -20,7 +21,10 @@ import java.io.IOException;
 
 public class Webvie extends AppCompatActivity {
 WebView mWebView;
-    @SuppressLint("SetJavaScriptEnabled")
+
+    boolean doubleBackToExitPressedOnce = false;
+
+@SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +107,25 @@ WebView.setWebContentsDebuggingEnabled(true);
             return new WebResourceResponse("text/css", "UTF-8", data);
         }
 
+    }
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
