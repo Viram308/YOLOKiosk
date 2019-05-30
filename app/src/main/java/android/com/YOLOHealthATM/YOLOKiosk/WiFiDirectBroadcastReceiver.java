@@ -13,6 +13,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -56,7 +57,7 @@ String textResult;
         this.isWifiP2pEnabled = false;
     }
 
-    private void readAddresses(String host) {
+    private void readAddresses(String host,Context context) {
 
         BufferedReader bufferedReader = null;
 
@@ -65,6 +66,8 @@ String textResult;
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
+                Log.d("LINE",""+line.toString());
+
                 String[] splitted = line.split(" +");
                 if (splitted.length >= 4) {
                     String ip = splitted[0];
@@ -132,12 +135,13 @@ String textResult;
                                         int i;
                                         for (i = 0; i < list.size(); i = i + 1) {
                                             host = list.get(i).deviceAddress;
+
                                             Log.d("hostmac", "" + host);
                                         }
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                readAddresses(host);
+                                                readAddresses(host,context);
                                                 textResult = "";
                                                 int j;
                                                 for (j = 0; j < listNote.size(); j++) {
