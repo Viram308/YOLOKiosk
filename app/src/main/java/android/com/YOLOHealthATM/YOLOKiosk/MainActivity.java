@@ -340,6 +340,10 @@ public class MainActivity extends AppCompatActivity /*implements WifiConnectorMo
                                                 ssi.setText("SSID :- " + group.getNetworkName());
                                                 pas.setText("Password :- " + group.getPassphrase());
                                             }
+                                            else {
+                                                ssi.setText("");
+                                                pas.setText("");
+                                            }
                                         }
 
                                         @Override
