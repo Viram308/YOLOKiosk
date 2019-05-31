@@ -121,8 +121,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
-            textResult = "";
-            listNote.clear();
+
             mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
 
                 @Override
@@ -131,9 +130,10 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                         mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
 
                             @Override
-                            public void onGroupInfoAvailable(WifiP2pGroup group) {
+                            public void onGroupInfoAvailable(final WifiP2pGroup group) {
                                 //This is the size you want
-                                Collection<WifiP2pDevice> peerList = group.getClientList();
+
+                                        Collection<WifiP2pDevice> peerList = group.getClientList();
 
                                 ArrayList<WifiP2pDevice> list = new ArrayList<WifiP2pDevice>(peerList);
 
@@ -145,14 +145,16 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                                 }
 
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
 
                                         Log.d("hostmac", "" + host);
                                         sp=context.getSharedPreferences(myprefs,Context.MODE_PRIVATE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
                                         String s=sp.getString("hostMac","");
                                         Log.d("PRINT S ", s);
+
+
                                         if(s.equals(""))
                                         {
                                             SharedPreferences.Editor editor=sp.edit();
@@ -187,7 +189,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
                                         }
                                     }
-                                }, 2500);
+                                }, 2000);
 
                             }
                         });

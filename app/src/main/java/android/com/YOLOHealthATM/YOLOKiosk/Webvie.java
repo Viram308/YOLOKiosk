@@ -1,13 +1,18 @@
 package android.com.YOLOHealthATM.YOLOKiosk;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
@@ -20,11 +25,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class Webvie extends AppCompatActivity {
-WebView mWebView;
+    WebView mWebView;
 
     boolean doubleBackToExitPressedOnce = false;
 
-@SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +41,20 @@ WebView mWebView;
         decorView.setSystemUiVisibility(uiOptions);
 // Remember that you should never show the action bar if the
 // status bar is hidden, so hide that too if necessary.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, 1001);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 100);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.MODIFY_AUDIO_SETTINGS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.MODIFY_AUDIO_SETTINGS}, 01);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.MEDIA_CONTENT_CONTROL) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.MEDIA_CONTENT_CONTROL}, 01);
+        }
 
-WebView.setWebContentsDebuggingEnabled(true);
+        WebView.setWebContentsDebuggingEnabled(true);
         mWebView = (WebView) findViewById(R.id.activity_main_webview);
         String ip= getIntent().getStringExtra("ip");
         Toast.makeText(getApplicationContext(),""+ip,Toast.LENGTH_SHORT).show();
@@ -55,8 +72,21 @@ WebView.setWebContentsDebuggingEnabled(true);
         settings.setAllowFileAccessFromFileURLs(true); //Maybe you don't need this rule
         settings.setAllowUniversalAccessFromFileURLs(true);
         mWebView.setWebViewClient(new MyWebViewClient());
-        mWebView.setWebChromeClient(new WebChromeClient());
+        mWebView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onPermissionRequest(final PermissionRequest request) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                            request.grant(request.getResources());
+
+                    }
+                });
+            }
+        });
         String url = "https://"+ip+":8080";
+
         mWebView.loadUrl(url);
 
     }
