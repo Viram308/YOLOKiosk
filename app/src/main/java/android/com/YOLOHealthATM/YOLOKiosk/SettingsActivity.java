@@ -43,7 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT| InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         alert.setView(input);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -51,9 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 // Do something with value!
                 if (input.getText().toString().equals(PASSWORD)) {
-                }
-
-                else{
+                } else {
                     Intent i = new Intent(SettingsActivity.this, MainActivity.class);
                     startActivity(i);
                     finish();
@@ -77,7 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(myprefs, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor =  sharedPreferences.edit();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("hostMac", "");
                 editor.commit();
 

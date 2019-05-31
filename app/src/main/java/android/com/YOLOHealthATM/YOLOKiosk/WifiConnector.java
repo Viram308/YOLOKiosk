@@ -128,7 +128,7 @@ public class WifiConnector {
             wifiConfiguration.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
             wifiConfiguration.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
             wifiConfiguration.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            wifiManager.enableNetwork(wifiManager.addNetwork(wifiConfiguration),true);
+            wifiManager.enableNetwork(wifiManager.addNetwork(wifiConfiguration), true);
             wifiManager.saveConfiguration();
 
         }
@@ -530,21 +530,20 @@ public class WifiConnector {
     // TODO show reason to remove failure!
 
     public void removeWifiNetwork(String SSID, String BSSID) {
-        Log.d("info","SSID :- "+SSID+"cureent"+getCurrentWifiSSID());
+        Log.d("info", "SSID :- " + SSID + "cureent" + getCurrentWifiSSID());
         List<WifiConfiguration> list1 = wifiManager.getConfiguredNetworks();
         if (list1 != null && list1.size() > 0) {
-            Log.d("info","SSID :- "+SSID+"cureent"+getCurrentWifiSSID());
+            Log.d("info", "SSID :- " + SSID + "cureent" + getCurrentWifiSSID());
 
             for (WifiConfiguration i : list1) {
                 try {
-                    Log.d("info","SSID :- "+i.SSID+"cureent");
+                    Log.d("info", "SSID :- " + i.SSID + "cureent");
 
                     wifiManager.removeNetwork(i.networkId);
 
-                    Log.d("REMOVE NETWORK",i.SSID+" " + i.networkId);
+                    Log.d("REMOVE NETWORK", i.SSID + " " + i.networkId);
 
                     wifiManager.saveConfiguration();
-
 
 
                 } catch (NullPointerException e) {

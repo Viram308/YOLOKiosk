@@ -1,21 +1,16 @@
 package android.com.YOLOHealthATM.YOLOKiosk;
 
 import android.Manifest;
-import android.com.YOLOHealthATM.YOLOKiosk.thread.StartProxyThread;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiManager;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -25,94 +20,31 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.List;
-
-import static android.com.YOLOHealthATM.YOLOKiosk.MainActivity.myprefs;
 
 public class WifiActivity extends AppCompatActivity implements WifiConnectorModel {
 
-    Button show_popup, closePopupBtn, forgetPopupBtn,enableButton1, disableButton1;
-    WifiP2pManager mManager;
+    Button closePopupBtn, forgetPopupBtn;
     ProgressBar spinner;
     WifiManager wifiManager;
-    WifiReceiver wifiReceiver;
-    int fl = 0;
-    WiFiListAdapter wifiListAdapter;
-    ListView wifiListView;
-    List<android.net.wifi.ScanResult> wifiList;
     RecyclerView wifiRecyclerView;
-    WifiViewHolder wifiViewHolder;
 
-    static int flag=0;
-    String[] s1;
-    private StartProxyThread proxyThread;
-    Button scanWifiBtn, inet;
     private WifiListRvAdapter adapter;
     private WifiConnector wifiConnector;
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
-    WifiP2pManager.Channel mChannel;
-    BroadcastReceiver mReceiver, mShowlist = null;
-    IntentFilter mIntentFilter, mmint = new IntentFilter();
-    TextView status, ssi, pas, w;
+    BroadcastReceiver mShowlist = null;
+    IntentFilter mmint = new IntentFilter();
+    TextView w;
     public static final String myprefs = "mysp";
-    String s = "", p = "";
-    Collection<WifiP2pDevice> l;
-    int f = 0;
-    LinearLayout linearLayout1;
-    SharedPreferences sp;
-
-
-    private void setMobileDataEnabled(boolean enabled) {
-        try {
-            TelephonyManager telephonyService = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-            Method setMobileDataEnabledMethod = telephonyService.getClass().getDeclaredMethod("setDataEnabled", boolean.class);
-
-            if (null != setMobileDataEnabledMethod) {
-                setMobileDataEnabledMethod.invoke(telephonyService, enabled);
-            }
-        } catch (Exception ex) {
-            Log.e(TAG, "Error setting mobile data state", ex);
-        }
-    }
-
-    // below method returns true if mobile data is on and vice versa
-    private boolean mobileDataEnabled(Context context) {
-        boolean mobileDataEnabled = false; // Assume disabled
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        try {
-            assert cm != null;
-            Class cmClass = Class.forName(cm.getClass().getName());
-            Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
-            method.setAccessible(true); // Make the method callable
-            // get the setting for "mobile data"
-            mobileDataEnabled = (Boolean) method.invoke(cm);
-        } catch (Exception e) {
-            // Some problem accessible private API
-            // TODO do whatever error handling you want here
-        }
-        return mobileDataEnabled;
-    }
 
     WifiManager wifi;
 
@@ -139,133 +71,16 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
 
         createWifiConnectorObject();
 
-
-
-
-
-
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
-
     }
-
-
-
-
 
     @Override
     public void onResume() {
         super.onResume();
-
-//        if (flag == 0) {
-//            sp = getApplicationContext().getSharedPreferences(myprefs, Context.MODE_PRIVATE);
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
-//                        public void onGroupInfoAvailable(final WifiP2pGroup group) {
-//
-//                            if (group != null) {
-//
-//                                mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
-//                                    @Override
-//                                    public void onSuccess() {
-//                                        mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
-//                                            @Override
-//                                            public void onSuccess() {
-//                                                Log.d("success", "first");
-//                                                Log.d("ssid1", "" + group.getNetworkName());
-//                                                Log.d("password1", "" + group.getPassphrase());
-//                                                s = sp.getString("ssid", "0");
-//                                                p = sp.getString("pass", "0");
-//
-//
-//                                                registerReceiver(mReceiver, mIntentFilter);
-//
-//                                                if (s.equals("0")) {
-//                                                    Editor edi = sp.edit();
-//                                                    edi.putString("ssid", "" + group.getNetworkName());
-//                                                    edi.putString("pass", "" + group.getPassphrase());
-//                                                    edi.apply();
-//                                                    ssi.setText("SSID :- " + group.getNetworkName());
-//                                                    pas.setText("Password :- " + group.getPassphrase());
-//                                                }
-//                                            }
-//
-//                                            @Override
-//                                            public void onFailure(int reason) {
-//                                                Log.d("first", "" + reason);
-//                                            }
-//                                        });
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailure(int reason) {
-//                                        Log.d("second", "" + reason);
-//                                    }
-//                                });
-//                            } else {
-//
-//                                new Handler().postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
-//                                            @SuppressLint("Assert")
-//
-//                                            @Override
-//                                            public void onSuccess() {
-//                                                new Handler().postDelayed(new Runnable() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
-//                                                            public void onGroupInfoAvailable(final WifiP2pGroup group) {
-//
-//                                                                Log.d("success", "third");
-//                                                                Log.d("ssid1", "" + group.getNetworkName());
-//                                                                Log.d("password1", "" + group.getPassphrase());
-//                                                                s = sp.getString("ssid", "0");
-//                                                                p = sp.getString("pass", "0");
-//                                                                registerReceiver(mReceiver, mIntentFilter);
-//                                                                if (s.equals("0")) {
-//                                                                    Editor edi = sp.edit();
-//                                                                    edi.putString("ssid", "" + group.getNetworkName());
-//                                                                    edi.putString("pass", "" + group.getPassphrase());
-//                                                                    edi.apply();
-//                                                                    ssi.setText("SSID :- " + group.getNetworkName());
-//                                                                    pas.setText("Password :- " + group.getPassphrase());
-//                                                                }
-//
-//                                                            }
-//                                                        });
-//                                                    }
-//
-//                                                }, 2000);
-//
-//
-//                                            }
-//
-//                                            @Override
-//                                            public void onFailure(int reason) {
-//                                                Toast.makeText(getApplicationContext(), "Not Created", Toast.LENGTH_SHORT).show();
-//                                            }
-//                                        });
-//
-//                                    }
-//                                }, 1000);
-//
-//                            }
-//
-//
-//                        }
-//                    });
-//
-//                }
-//            }, 1000);
-//        }
         mShowlist = new ShowWifiListReceiver(wifiConnector);
         registerReceiver(mShowlist, mmint);
-
     }
 
     @Override
@@ -306,33 +121,20 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
             }
         });
 
-
-//        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                    wifiConnector.enableWifi();
-//                } else {
-//                    wifiConnector.disableWifi();
-//                }
-//            }
-//        });
-
-
         if (!wifi.isWifiEnabled()) {
             wifi.setWifiEnabled(true);
         }
         mmint.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 
-        spinner = (ProgressBar) findViewById(R.id.progressBar);
+        spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.VISIBLE);
-        closePopupBtn = (Button) findViewById(R.id.passwordBtn);
-        forgetPopupBtn=findViewById(R.id.forgetPopupBtn);
+        closePopupBtn = findViewById(R.id.passwordBtn);
+        forgetPopupBtn = findViewById(R.id.forgetPopupBtn);
         wifiRecyclerView = findViewById(R.id.wifiRv);
         forgetPopupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                wifiConnector.removeWifiNetwork(wifiConnector.getCurrentWifiSSID(),"");
+                wifiConnector.removeWifiNetwork(wifiConnector.getCurrentWifiSSID(), "");
                 adapter.notifyDataSetChanged();
             }
         });
@@ -364,10 +166,6 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
         wifiRecyclerView.setItemAnimator(new DefaultItemAnimator());
         wifiRecyclerView.setAdapter(adapter);
         wifiRecyclerView.setHasFixedSize(true);
-
-
-
-
     }
 
     public void openConnectDialog(ScanResult scanResult) {
@@ -385,27 +183,10 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
     private void onWifiEnabled() {
 
         if (permisionLocationOn()) {
-            //instantiate popup window
-
-//            wifiList = wifiManager.getScanResults();
-
-            //display the popup window
             scanForWifiNetworks();
-            //close the popup window on button click
-//            wifiListAdapter = new WiFiListAdapter(getApplicationContext(), wifiList);
-
-
-//            wifiListAdapter.setOnClick(MainActivity.this);
-
-
         } else {
             checkLocationTurnOn();
         }
-    }
-
-    private void onWifiDisabled() {
-
-//        adapter.setScanResultList(new ArrayList<ScanResult>());
     }
 
     private Boolean permisionLocationOn() {
@@ -474,12 +255,9 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
         this.wifiConnector.connectToWifi(new ConnectionResultListener() {
             @Override
             public void successfulConnect(String SSID) {
-
-
                 w.setVisibility(View.INVISIBLE);
                 Toast.makeText(WifiActivity.this, "You are connected to " + scanResult.SSID + "!!", Toast.LENGTH_SHORT).show();
                 adapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -490,7 +268,6 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
 
             @Override
             public void onStateChange(SupplicantState supplicantState) {
-
             }
         });
     }
@@ -502,8 +279,6 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
 
     @Override
     public void destroyWifiConnectorListeners() {
-
     }
-
 
 }

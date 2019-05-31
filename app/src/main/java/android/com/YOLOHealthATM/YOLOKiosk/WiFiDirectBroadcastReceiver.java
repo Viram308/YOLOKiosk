@@ -29,6 +29,7 @@ import static android.com.YOLOHealthATM.YOLOKiosk.WifiActivity.myprefs;
  */
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     SharedPreferences sp;
+
     class Node {
         String ip;
 
@@ -141,7 +142,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                                 for (i = 0; i < list.size(); i = i + 1) {
                                     host = list.get(i).deviceAddress;
                                     Log.d("hostmac", "" + host);
-                                    Log.d("hostmac", "" + host+"Name : - "+list.get(i).deviceName);
+                                    Log.d("hostmac", "" + host + "Name : - " + list.get(i).deviceName);
                                 }
 
 
@@ -150,17 +151,15 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                                     public void run() {
 
                                         Log.d("hostmac", "" + host);
-                                        sp=context.getSharedPreferences(myprefs,Context.MODE_PRIVATE);
-                                        String s=sp.getString("hostMac","");
+                                        sp = context.getSharedPreferences(myprefs, Context.MODE_PRIVATE);
+                                        String s = sp.getString("hostMac", "");
                                         Log.d("PRINT S ", s);
-                                        if(s.equals(""))
-                                        {
-                                            SharedPreferences.Editor editor=sp.edit();
-                                            editor.putString("hostMac",host);
+                                        if (s.equals("")) {
+                                            SharedPreferences.Editor editor = sp.edit();
+                                            editor.putString("hostMac", host);
                                             editor.commit();
                                             readAddresses(host);
-                                        }
-                                        else{
+                                        } else {
                                             readAddresses(s);
                                         }
 

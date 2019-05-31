@@ -34,9 +34,10 @@ public class WifiListRvAdapter extends RecyclerView.Adapter<WifiListRvAdapter.Wi
     private WifiConnector wifiConnector;
     private WifiManager wifiManager;
     private WifiItemListener wifiItemListener;
-    public WifiListRvAdapter(WifiConnector wifiConnector,WifiManager wifiManager, WifiItemListener wifiItemListener) {
+
+    public WifiListRvAdapter(WifiConnector wifiConnector, WifiManager wifiManager, WifiItemListener wifiItemListener) {
         this.wifiConnector = wifiConnector;
-        this.wifiManager=wifiManager;
+        this.wifiManager = wifiManager;
         this.wifiItemListener = wifiItemListener;
     }
 
@@ -53,7 +54,7 @@ public class WifiListRvAdapter extends RecyclerView.Adapter<WifiListRvAdapter.Wi
     @Override
     public void onBindViewHolder(final WifiItem holder, final int position) {
 
-        Log.d("Current",""+wifiConnector.getCurrentWifiSSID());
+        Log.d("Current", "" + wifiConnector.getCurrentWifiSSID());
         holder.fill(scanResultList.get(position), wifiManager.getConnectionInfo().getSSID());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +101,7 @@ public class WifiListRvAdapter extends RecyclerView.Adapter<WifiListRvAdapter.Wi
 
         @SuppressLint("SetTextI18n")
         public void fill(ScanResult scanResult, String currentSsid) {
-            String s="\""+scanResult.SSID+"\"";
+            String s = "\"" + scanResult.SSID + "\"";
             if (s.equals(currentSsid)) {
                 wifiName.setTextColor(Color.GREEN);
             }

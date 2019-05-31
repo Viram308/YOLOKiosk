@@ -1,6 +1,6 @@
 package android.com.YOLOHealthATM.YOLOKiosk;
 
-public interface WifiStateListener{
+public interface WifiStateListener {
 
     void onStateChange(int wifiState);
 

@@ -66,7 +66,7 @@
         android:layout_margin="20dp"
         android:layout_toLeftOf="@id/net"
         android:layout_marginRight="40dp"
-        android:background="@drawable/ic_settings_black_48dp"
+        android:background="@drawable/ic_settings_48dp"
         android:layout_alignParentTop="true" />
 
 </RelativeLayout>

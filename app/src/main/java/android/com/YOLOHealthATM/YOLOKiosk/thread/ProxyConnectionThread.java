@@ -33,7 +33,8 @@ public final class ProxyConnectionThread extends Thread {
             } while (inputStream.available() > 0);
             ParseRequest ParseRequest = new ParseRequest(string);
             if (ParseRequest.flag) {
-                final OutputStream outputStream2;OutputStream outputStream1;
+                final OutputStream outputStream2;
+                OutputStream outputStream1;
                 if (ParseRequest.requestType.equals("CONNECT")) {
                     try {
                         Socket socket = new Socket(ParseRequest.url, ParseRequest.port);

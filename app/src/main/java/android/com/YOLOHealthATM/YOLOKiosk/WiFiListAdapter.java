@@ -61,7 +61,7 @@ public class WiFiListAdapter extends RecyclerView.Adapter<WifiViewHolder> {
         SSIDname = wiFiListScanResult.get(position).SSID;
 
         String[] s0 = SSIDname.split(",");
-        Log.d("S0",""+s0[0]);
+        Log.d("S0", "" + s0[0]);
 
         newSSID = s0[0];
     }
@@ -73,7 +73,6 @@ public class WiFiListAdapter extends RecyclerView.Adapter<WifiViewHolder> {
     void setOnClick(OnItemClicked onClick) {
         this.onClick = onClick;
     }
-
 
 
 //    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {

@@ -6,5 +6,6 @@ package android.com.YOLOHealthATM.YOLOKiosk;
  */
 public interface RemoveWifiListener {
     void onWifiNetworkRemoved();
+
     void onWifiNetworkRemoveError();
 }
