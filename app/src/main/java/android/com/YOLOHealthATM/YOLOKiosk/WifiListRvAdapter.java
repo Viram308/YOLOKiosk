@@ -1,13 +1,6 @@
-/*
- * Created by Jose Flavio on 2/5/18 7:50 PM.
- * Copyright (c) 2017 JoseFlavio.
- * All rights reserved.
- */
-
 package android.com.YOLOHealthATM.YOLOKiosk;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
@@ -22,12 +15,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * WifiListRv
- *
- * @author Jose Flavio - jflavio90@gmail.com
- * @since 5/2/17
- */
 public class WifiListRvAdapter extends RecyclerView.Adapter<WifiListRvAdapter.WifiItem> {
 
     private List<ScanResult> scanResultList = new ArrayList<>();
@@ -113,7 +100,6 @@ public class WifiListRvAdapter extends RecyclerView.Adapter<WifiListRvAdapter.Wi
 
     interface WifiItemListener {
         void onWifiItemClicked(ScanResult scanResult);
-
         void onWifiItemLongClick(ScanResult scanResult);
     }
 

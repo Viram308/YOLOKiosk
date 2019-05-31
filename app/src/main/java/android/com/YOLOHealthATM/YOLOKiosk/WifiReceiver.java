@@ -1,9 +1,5 @@
 package android.com.YOLOHealthATM.YOLOKiosk;
 
-/**
- * Created by Viram on 5/16/2019.
- */
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

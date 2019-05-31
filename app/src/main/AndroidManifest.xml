@@ -52,7 +52,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Webvie"
+            android:name=".WebViewActivity"
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
 

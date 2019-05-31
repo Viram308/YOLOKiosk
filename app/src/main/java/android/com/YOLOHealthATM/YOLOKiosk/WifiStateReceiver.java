@@ -1,9 +1,3 @@
-/*
- * Created by Jose Flavio on 10/18/17 12:55 PM.
- * Copyright (c) 2017 JoseFlavio.
- * All rights reserved.
- */
-
 package android.com.YOLOHealthATM.YOLOKiosk;
 
 import android.content.BroadcastReceiver;
@@ -12,12 +6,6 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-/**
- * WifiStateReceiver
- *
- * @author Jose Flavio - jflavio90@gmail.com
- * @since 18/10/17
- */
 class WifiStateReceiver extends BroadcastReceiver {
 
     private WifiConnector wifiConnector;
@@ -53,9 +41,7 @@ class WifiStateReceiver extends BroadcastReceiver {
                 wifiLog("Wifi disabled");
                 wifiConnector.getWifiStateListener().onWifiDisabled();
                 break;
-
         }
-
     }
 
     private void wifiLog(String text) {

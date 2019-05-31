@@ -1,8 +1,3 @@
-/*
- * Created by Jose Flavio on 10/18/17 12:49 PM.
- * Copyright (c) 2017 JoseFlavio.
- * All rights reserved.
- */
 package android.com.YOLOHealthATM.YOLOKiosk;
 
 import android.content.BroadcastReceiver;
@@ -12,12 +7,6 @@ import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-/**
- * WifiConnectionReceiver
- *
- * @author Jose Flavio - jflavio90@gmail.com
- * @since 18/10/17
- */
 class WifiConnectionReceiver extends BroadcastReceiver {
 
     private WifiConnector wifiConnector;
@@ -51,7 +40,7 @@ class WifiConnectionReceiver extends BroadcastReceiver {
                         wifiConnector.getConnectionResultListener().successfulConnect(wifiConnector.getCurrentWifiSSID());
                         wifiConnector.unregisterWifiConnectionListener();
                     }
-                    // if BSSID is null, may be is still triying to get information about the access point
+                    // if BSSID is null, may be is still trying to get information about the access point
                     break;
 
                 case DISCONNECTED:
@@ -74,7 +63,6 @@ class WifiConnectionReceiver extends BroadcastReceiver {
                     wifiLog("Authenticating...");
                     break;
             }
-
         }
     }
 

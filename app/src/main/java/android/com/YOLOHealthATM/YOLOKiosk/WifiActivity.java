@@ -193,7 +193,6 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-
     private Boolean checkLocationTurnOn() {
         boolean onLocation = true;
         boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -271,14 +270,4 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
             }
         });
     }
-
-    @Override
-    public void disconnectFromAccessPoint(ScanResult scanResult) {
-        wifiConnector.removeWifiNetwork(wifiConnector.getCurrentWifiSSID(), "");
-    }
-
-    @Override
-    public void destroyWifiConnectorListeners() {
-    }
-
 }

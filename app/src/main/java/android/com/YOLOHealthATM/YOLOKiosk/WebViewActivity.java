@@ -5,7 +5,6 @@ import android.net.http.SslError;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.SslErrorHandler;
@@ -19,7 +18,7 @@ import android.widget.Toast;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-public class Webvie extends AppCompatActivity {
+public class WebViewActivity extends AppCompatActivity {
     WebView mWebView;
 
     boolean doubleBackToExitPressedOnce = false;
@@ -82,17 +81,6 @@ public class Webvie extends AppCompatActivity {
             }
         }
 
-        /**
-         * Return WebResourceResponse with CSS markup from a String.
-         */
-        @SuppressWarnings("deprecation")
-        private WebResourceResponse getCssWebResourceResponseFromString() {
-            return getUtf8EncodedCssWebResourceResponse(new ByteArrayInputStream("body { background-color: #F781F3; }".getBytes()));
-        }
-
-        /**
-         * Return WebResourceResponse with CSS markup from an asset (e.g. "assets/style.css").
-         */
         private WebResourceResponse getCssWebResourceResponseFromAsset() {
             try {
                 return getUtf8EncodedCssWebResourceResponse((ByteArrayInputStream) getAssets().open("style.css"));
@@ -101,9 +89,6 @@ public class Webvie extends AppCompatActivity {
             }
         }
 
-        /**
-         * Return WebResourceResponse with CSS markup from a raw resource (e.g. "raw/style.css").
-         */
         private WebResourceResponse getUtf8EncodedCssWebResourceResponse(ByteArrayInputStream data) {
             return new WebResourceResponse("text/css", "UTF-8", data);
         }

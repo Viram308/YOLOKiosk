@@ -2,16 +2,12 @@ package android.com.YOLOHealthATM.YOLOKiosk;
 
 import android.content.Context;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 public class WifiConnector {
@@ -23,7 +19,6 @@ public class WifiConnector {
     private WifiStateListener wifiStateListener;
     private ConnectionResultListener connectionResultListener;
     private ShowWifiListener showWifiListListener;
-    private RemoveWifiListener removeWifiListener;
     public IntentFilter wifiStateFilter;
     private IntentFilter chooseWifiFilter;
     private IntentFilter showWifiListFilter;
@@ -89,24 +84,6 @@ public class WifiConnector {
         this.wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
     }
 
-//    public WifiConnector(Context context, ScanResult scanResult, String password) {
-//        this.context = context;
-//        this.wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//        setWifiConfiguration(scanResult.SSID, scanResult.BSSID, getWifiSecurityType(scanResult), password);
-//    }
-//
-//    public WifiConnector(WifiConfiguration wifiConfiguration, Context context) {
-//        this.wifiConfiguration = wifiConfiguration;
-//        this.context = context;
-//        this.wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//    }
-//
-//    public WifiConnector(Context context, String SSID, String BSSID, String securityType, String password) {
-//        this.context = context;
-//        this.wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//        setWifiConfiguration(SSID, BSSID, securityType, password);
-//    }
-
     public void setScanResult(ScanResult scanResult, String password) {
         setWifiConfiguration(scanResult.SSID, scanResult.BSSID, getWifiSecurityType(scanResult), password);
     }
@@ -134,34 +111,15 @@ public class WifiConnector {
         }
     }
 
-    // region Receivers
-
-
     public WifiConnector registerWifiStateListener(WifiStateListener wifiStateListener) {
         createWifiStateBroadcast();
         this.wifiStateListener = wifiStateListener;
         return this;
     }
 
-    public void unregisterWifiStateListener() {
-        try {
-            context.getApplicationContext().unregisterReceiver(wifiStateReceiver);
-        } catch (Exception e) {
-            wifiLog("Error unregistering Wifi State Listener because may be it was never registered");
-        }
-    }
-
     WifiStateListener getWifiStateListener() {
         return wifiStateListener;
     }
-
-
-//    public WifiConnector registerWifiConnectionListener(ConnectionResultListener connectionResultListener) {
-//        createWifiConnectionBroadcastListener();
-//        this.connectionResultListener = connectionResultListener;
-//        return this;
-//    }
-
 
     public synchronized void unregisterWifiConnectionListener() {
         try {
@@ -171,20 +129,9 @@ public class WifiConnector {
         }
     }
 
-    /**
-     * @return the current {@link #connectionResultListener} object
-     */
     ConnectionResultListener getConnectionResultListener() {
         return connectionResultListener;
     }
-
-
-//    public WifiConnector registerShowWifiListListener(ShowWifiListener showWifiListener) {
-//        createShowWifiListBroadcastListener();
-//        this.showWifiListListener = showWifiListener;
-//        return this;
-//    }
-
 
     public synchronized void unregisterShowWifiListListener() {
         try {
@@ -199,36 +146,6 @@ public class WifiConnector {
         return showWifiListListener;
     }
 
-
-//    public WifiConnector registerWifiRemoveListener(RemoveWifiListener removeWifiListener) {
-//        createWifiStateBroadcast();
-//        this.removeWifiListener = removeWifiListener;
-//        return this;
-//    }
-
-//    public synchronized void unregisterWifiRemoveListener() {
-//        try {
-//            context.getApplicationContext().unregisterReceiver(wifiStateReceiver);
-//        } catch (Exception e) {
-//            wifiLog("Error unregistering Wifi Remove Listener because may be it was never registered");
-//        }
-//    }
-
-//    public synchronized void unregisterReceivers(Object... broadcastReceivers) {
-//        wifiLog("Unregistering wifi listener(s)");
-//        for (int i = 0; i < broadcastReceivers.length; i++) {
-//
-//            try {
-//                context.getApplicationContext().unregisterReceiver((BroadcastReceiver) broadcastReceivers[i]);
-//            } catch (Exception e) {
-//                wifiLog("Error unregistering broadcast " + i + " because may be it was never registered");
-//            }
-//
-//        }
-//    }
-
-    // endregion
-
     public WifiConnector enableWifi() {
         if (!wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);
@@ -240,9 +157,6 @@ public class WifiConnector {
         return this;
     }
 
-    /**
-     * Just for having information about a current network if connected when wifi is enabled.
-     */
     private void setInitWifiInformation() {
         connectionResultListener = new ConnectionResultListener() {
             @Override
@@ -273,33 +187,6 @@ public class WifiConnector {
         }
     }
 
-    /**
-     * For disabling wifi
-     * If you want to listen wifi states, should call {@link #unregisterWifiStateListener()} and wait for
-     * callback to update User Interface on your application
-     */
-    public void disableWifi() {
-        if (wifiManager.isWifiEnabled()) {
-            wifiManager.setWifiEnabled(false);
-        } else {
-            wifiLog("Wifi is not enable...");
-        }
-    }
-
-    /**
-     * For knowing if wifi is enabled
-     *
-     * @return true if wifi is enabled
-     */
-    public boolean isWifiEnbled() {
-        return wifiManager.isWifiEnabled();
-    }
-
-    private void setCurrentWifiInfo() {
-        setCurrentWifiSSID(wifiManager.getConnectionInfo().getSSID());
-        setCurrentWifiBSSID(wifiManager.getConnectionInfo().getBSSID());
-    }
-
     public String getCurrentWifiSSID() {
         return currentWifiSSID;
     }
@@ -309,29 +196,14 @@ public class WifiConnector {
         CURRENT_WIFI = getCurrentWifiSSID();
     }
 
-    public String getCurrentWifiBSSID() {
-        return currentWifiBSSID;
-    }
-
     public void setCurrentWifiBSSID(String currentWifiBSSID) {
         this.currentWifiBSSID = currentWifiBSSID;
     }
 
-    public boolean setPriority(int priority) {
-        try {
-            this.wifiConfiguration.priority = priority;
-            return true;
-        } catch (NullPointerException e) {
-            return false;
-        }
-    }
+
 
     public WifiManager getWifiManager() {
         return wifiManager;
-    }
-
-    public void setWifiManager(WifiManager wifiManager) {
-        this.wifiManager = wifiManager;
     }
 
     private void createWifiConnectionBroadcastListener() {
@@ -356,12 +228,6 @@ public class WifiConnector {
         }
     }
 
-    /**
-     * Tries to scan available wifi networks. After {@link ShowWifiListReceiver} gets results (or not), it automatically  unregister the
-     * current broadcast listener so is not necessary to explicitly call {@link #unregisterShowWifiListListener()}.
-     *
-     * @param showWifiListener interface that will give the results
-     */
     public void showWifiList(ShowWifiListener showWifiListener) {
         this.showWifiListListener = showWifiListener;
         wifiLog("show wifi list");
@@ -371,20 +237,6 @@ public class WifiConnector {
 
     private void scanWifiNetworks() {
         wifiManager.startScan();
-    }
-
-    public boolean isAlreadyConnected(String BSSID) {
-        ConnectivityManager connManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getActiveNetworkInfo();
-
-        wifiLog("isAlreadyConnected: " + wifiManager.getConnectionInfo().getBSSID() + " " + BSSID);
-
-        if (mWifi != null && mWifi.getType() == ConnectivityManager.TYPE_WIFI && mWifi.isConnected()) {
-            isConnectedToBSSID(BSSID);
-        } else {
-            wifiLog("getActiveNetwork - NetworkInfo is null");
-        }
-        return false;
     }
 
     public boolean isConnectedToBSSID(String BSSID) {
@@ -397,11 +249,6 @@ public class WifiConnector {
         return false;
     }
 
-    /**
-     * Tries to connect to specific wifi set on the constructor.
-     *
-     * @param connectionResultListener with methods of success and error
-     */
     public void connectToWifi(ConnectionResultListener connectionResultListener) {
         this.connectionResultListener = connectionResultListener;
         if (isConnectedToBSSID(wifiConfiguration.BSSID)) {
@@ -418,15 +265,6 @@ public class WifiConnector {
         }
     }
 
-    public void setConnectionResultListener(ConnectionResultListener connectionResultListener) {
-        this.connectionResultListener = connectionResultListener;
-        createWifiConnectionBroadcastListener();
-    }
-
-    /**
-     * Tries to connect to specific wifi network set on the constructor.
-     * <strong>Remember: you must be register {@link #connectionResultListener} object before.</strong>
-     */
     public void connectToWifi() {
         if (isConnectedToBSSID(wifiConfiguration.BSSID)) {
             connectionResultListener.errorConnect(SAME_NETWORK);
@@ -441,13 +279,6 @@ public class WifiConnector {
         }
     }
 
-    /**
-     * Allows to connect to specific Wifi access point.
-     * <ul><li>Tries to get network id</li></ul>
-     * <ul><li>if network id = -1 add network configuration</li></ul>
-     *
-     * @return boolean value if connection was successfully completed
-     */
     private boolean connectToWifiAccesPoint() {
         createWifiConnectionBroadcastListener();
         int networkId = getNetworkId(wifiConfiguration.SSID);
@@ -459,13 +290,6 @@ public class WifiConnector {
         return enableNetwork(networkId);
     }
 
-    /**
-     * Search network id by given SSID.
-     * If network is totally new, it returns -1.
-     *
-     * @param SSID name of wifi network
-     * @return wifi network id
-     */
     private int getNetworkId(String SSID) {
         confList = wifiManager.getConfiguredNetworks();
         if (confList != null && confList.size() > 0) {
@@ -507,26 +331,6 @@ public class WifiConnector {
         return str;
     }
 
-    public void removeCurrentWifiNetwork(RemoveWifiListener removeWifiListener) {
-        this.removeWifiListener = removeWifiListener;
-        removeWifiNetwork(getCurrentWifiSSID(), getCurrentWifiBSSID());
-    }
-
-    public void removeWifiNetwork(WifiConfiguration wifiConfiguration, RemoveWifiListener removeWifiListener) {
-        this.removeWifiListener = removeWifiListener;
-        removeWifiNetwork(wifiConfiguration.SSID, wifiConfiguration.BSSID);
-    }
-
-    public void removeWifiNetwork(String SSID, String BSSID, RemoveWifiListener removeWifiListener) {
-        this.removeWifiListener = removeWifiListener;
-        removeWifiNetwork(SSID, BSSID);
-    }
-
-    public void removeWifiNetwork(ScanResult scanResult, RemoveWifiListener removeWifiListener) {
-        this.removeWifiListener = removeWifiListener;
-        removeWifiNetwork(scanResult.SSID, scanResult.BSSID);
-    }
-
     // TODO show reason to remove failure!
 
     public void removeWifiNetwork(String SSID, String BSSID) {
@@ -556,36 +360,6 @@ public class WifiConnector {
         }
     }
 
-    /**
-     * ForgetNetwork is a method that will only works if app is signed and run as system.
-     * It will look for "forget" hidden method on WifiManager class.
-     *
-     * @param wifiManager current wifiManager
-     * @param i           the wifiConfigured network to delete
-     * @hide
-     */
-    public void forgetWifiNetwork(WifiManager wifiManager, WifiConfiguration i) {
-        try {
-            Method[] methods = wifiManager.getClass().getDeclaredMethods();
-            Method forgetMEthod = null;
-            for (Method method : methods) {
-                if (method.getName().contains("forget")) {
-                    forgetMEthod = method;
-                    forgetMEthod.invoke(wifiManager, i.networkId, null);
-                    wifiLog("Forgotten network " + i.SSID);
-                }
-            }
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            wifiLog("Exception: " + e.toString());
-        }
-    }
-
-    /**
-     * Similar to {@link #forgetWifiNetwork(WifiManager, WifiConfiguration)} but this will run with any application
-     * installed as user app and will only delete wifi configurations created by its own.
-     *
-     * @return true if delete configuration was successful
-     */
     boolean deleteWifiConf() {
         try {
             confList = wifiManager.getConfiguredNetworks();

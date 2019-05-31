@@ -1,9 +1,3 @@
-/*
- * Created by Jose Flavio on 2/10/18 4:33 PM.
- * Copyright (c) 2017 JoseFlavio.
- * All rights reserved.
- */
-
 package android.com.YOLOHealthATM.YOLOKiosk;
 
 import android.app.Dialog;

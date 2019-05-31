@@ -26,7 +26,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity /*implements WifiConnectorModel*/ {
+public class MainActivity extends AppCompatActivity {
+
     Button settingsButton;
     WifiP2pManager mManager;
 
@@ -34,8 +35,6 @@ public class MainActivity extends AppCompatActivity /*implements WifiConnectorMo
     static int flag = 0;
     private StartProxyThread proxyThread;
     Button scanWifiBtn;
-
-    private static final String TAG = MainActivity.class.getSimpleName();
 
     Channel mChannel;
     BroadcastReceiver mReceiver;

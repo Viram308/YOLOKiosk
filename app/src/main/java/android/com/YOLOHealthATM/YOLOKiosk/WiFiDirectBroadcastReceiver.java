@@ -5,8 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
@@ -24,19 +22,14 @@ import java.util.Collection;
 
 import static android.com.YOLOHealthATM.YOLOKiosk.WifiActivity.myprefs;
 
-/**
- * Created by Viram on 5/13/2019.
- */
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     SharedPreferences sp;
 
     class Node {
         String ip;
 
-
         Node(String ip) {
             this.ip = ip;
-
         }
 
         @Override
@@ -92,13 +85,13 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
         } catch (IOException e) {
             Log.d("jj", "jj");
             e.printStackTrace();
-        }//         finally {
-//            try {
-//                bufferedReader.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -173,34 +166,21 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                                         }
                                         Log.d("ip", "" + textResult);
                                         if (!textResult.equals("")) {
-//                                                    do {
-//                                                        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-//                                                        connected[0] = activeNetworkInfo != null && activeNetworkInfo.isConnected();
-//                                                    } while (!connected[0]);
-
-
-                                            Intent intent = new Intent(context, Webvie.class);
+                                            Intent intent = new Intent(context, WebViewActivity.class);
                                             intent.putExtra("ip", textResult);
                                             context.startActivity(intent);
-
-
                                         }
                                     }
                                 }, 2500);
-
                             }
                         });
                     }
                 }
 
             });
-
             // Connection state changed! We should probably do something about
             // that.
-
-
-        } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-
+            } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
         }
     }
 
