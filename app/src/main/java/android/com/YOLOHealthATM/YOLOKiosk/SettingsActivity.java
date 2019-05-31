@@ -3,6 +3,7 @@ package android.com.YOLOHealthATM.YOLOKiosk;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import java.net.PasswordAuthentication;
+
+import static android.com.YOLOHealthATM.YOLOKiosk.MainActivity.myprefs;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -70,7 +73,14 @@ public class SettingsActivity extends AppCompatActivity {
         sharedPrefButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(myprefs, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor =  sharedPreferences.edit();
+                editor.putString("hostMac", "");
+                editor.commit();
 
+                Intent i = new Intent(SettingsActivity.this, MainActivity.class);
+                startActivity(i);
+                finish();
             }
         });
 

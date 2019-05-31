@@ -539,8 +539,13 @@ public class WifiConnector {
                 try {
                     Log.d("info","SSID :- "+i.SSID+"cureent");
 
-                        wifiManager.removeNetwork(wifiManager.getConnectionInfo().getNetworkId());
-                        wifiManager.saveConfiguration();
+                    wifiManager.removeNetwork(i.networkId);
+
+                    Log.d("REMOVE NETWORK",i.SSID+" " + i.networkId);
+
+                    wifiManager.saveConfiguration();
+
+
 
                 } catch (NullPointerException e) {
                     wifiLog("Exception on removing wifi network: " + e.toString());
@@ -548,7 +553,7 @@ public class WifiConnector {
             }
         } else {
             wifiLog("Empty Wifi List");
-            removeWifiListener.onWifiNetworkRemoveError();
+
         }
     }
 

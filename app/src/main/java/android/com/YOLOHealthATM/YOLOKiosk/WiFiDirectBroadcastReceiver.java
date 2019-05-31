@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -21,10 +22,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static android.com.YOLOHealthATM.YOLOKiosk.WifiActivity.myprefs;
+
 /**
  * Created by Viram on 5/13/2019.
  */
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
+    SharedPreferences sp;
     class Node {
         String ip;
 
@@ -46,7 +50,8 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     private boolean isWifiP2pEnabled;
     String host;
     ArrayList<Node> listNote = new ArrayList<>();
-String textResult;
+    String textResult;
+
     public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
                                        Activity activity) {
         super();
@@ -66,12 +71,12 @@ String textResult;
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] splitted = line.split(" +");
-                Log.d("line",""+line);
+                Log.d("line", "" + line);
                 if (splitted.length >= 4) {
                     String ip = splitted[0];
                     String mac = splitted[3];
-                    Log.d("mac",""+ip);
-                    Log.d("mac",""+mac);
+                    Log.d("mac", "" + ip);
+                    Log.d("mac", "" + mac);
                     if (mac.equals(host)) {
 
                         Node thisNode = new Node(ip);
@@ -81,10 +86,10 @@ String textResult;
             }
 
         } catch (FileNotFoundException e) {
-            Log.d("jj","jj");
+            Log.d("jj", "jj");
             e.printStackTrace();
         } catch (IOException e) {
-            Log.d("jj","jj");
+            Log.d("jj", "jj");
             e.printStackTrace();
         }//         finally {
 //            try {
@@ -116,68 +121,83 @@ String textResult;
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
-                textResult="";
-                listNote.clear();
-                    mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
+            textResult = "";
+            listNote.clear();
+            mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
 
-                        @Override
-                        public void onConnectionInfoAvailable(final WifiP2pInfo info) {
-                            if (info.isGroupOwner) {
-                                mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+                @Override
+                public void onConnectionInfoAvailable(final WifiP2pInfo info) {
+                    if (info.isGroupOwner) {
+                        mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
 
+                            @Override
+                            public void onGroupInfoAvailable(WifiP2pGroup group) {
+                                //This is the size you want
+                                Collection<WifiP2pDevice> peerList = group.getClientList();
+
+                                ArrayList<WifiP2pDevice> list = new ArrayList<WifiP2pDevice>(peerList);
+
+                                int i;
+                                for (i = 0; i < list.size(); i = i + 1) {
+                                    host = list.get(i).deviceAddress;
+                                    Log.d("hostmac", "" + host);
+                                    Log.d("hostmac", "" + host+"Name : - "+list.get(i).deviceName);
+                                }
+
+
+                                new Handler().postDelayed(new Runnable() {
                                     @Override
-                                    public void onGroupInfoAvailable(WifiP2pGroup group) {
-                                        //This is the size you want
-                                        Collection<WifiP2pDevice> peerList = group.getClientList();
+                                    public void run() {
 
-                                        ArrayList<WifiP2pDevice> list = new ArrayList<WifiP2pDevice>(peerList);
-
-                                        int i;
-                                        for (i = 0; i < list.size(); i = i + 1) {
-                                            host = list.get(i).deviceAddress;
-                                            Log.d("hostmac", "" + host);
-                                        }
                                         Log.d("hostmac", "" + host);
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
+                                        sp=context.getSharedPreferences(myprefs,Context.MODE_PRIVATE);
+                                        String s=sp.getString("hostMac","");
+                                        Log.d("PRINT S ", s);
+                                        if(s.equals(""))
+                                        {
+                                            SharedPreferences.Editor editor=sp.edit();
+                                            editor.putString("hostMac",host);
+                                            editor.commit();
+                                            readAddresses(host);
+                                        }
+                                        else{
+                                            readAddresses(s);
+                                        }
 
 
-                                        readAddresses(host);
+                                        textResult = "";
+                                        int j;
+                                        for (j = 0; j < listNote.size(); j++) {
 
-                                                textResult = "";
-                                                int j;
-                                                for (j = 0; j < listNote.size(); j++) {
+                                            textResult = listNote.get(j).toString();
 
-                                                    textResult = listNote.get(j).toString();
-
-                                                }
-                                                Log.d("ip", "" + textResult);
-                                                if (!textResult.equals("")) {
+                                        }
+                                        Log.d("ip", "" + textResult);
+                                        if (!textResult.equals("")) {
 //                                                    do {
 //                                                        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 //                                                        connected[0] = activeNetworkInfo != null && activeNetworkInfo.isConnected();
 //                                                    } while (!connected[0]);
 
 
-                                                    Intent intent = new Intent(context, Webvie.class);
-                                                    intent.putExtra("ip", textResult);
-                                                    context.startActivity(intent);
+                                            Intent intent = new Intent(context, Webvie.class);
+                                            intent.putExtra("ip", textResult);
+                                            context.startActivity(intent);
 
 
-                                                }
-                                            }
-                                        },1000);
-
+                                        }
                                     }
-                                });
+                                }, 2500);
+
                             }
-                        }
+                        });
+                    }
+                }
 
-                    });
+            });
 
-                // Connection state changed! We should probably do something about
-                // that.
+            // Connection state changed! We should probably do something about
+            // that.
 
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
@@ -190,4 +210,3 @@ String textResult;
     }
 
 }
-

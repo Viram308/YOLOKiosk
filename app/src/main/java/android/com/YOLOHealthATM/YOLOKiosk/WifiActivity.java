@@ -28,10 +28,13 @@ import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,9 +45,11 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
+import static android.com.YOLOHealthATM.YOLOKiosk.MainActivity.myprefs;
+
 public class WifiActivity extends AppCompatActivity implements WifiConnectorModel {
 
-    Button show_popup, closePopupBtn, enableButton1, disableButton1;
+    Button show_popup, closePopupBtn, forgetPopupBtn,enableButton1, disableButton1;
     WifiP2pManager mManager;
     ProgressBar spinner;
     WifiManager wifiManager;
@@ -314,44 +319,51 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
 //        });
 
 
-            if (!wifi.isWifiEnabled()) {
-                wifi.setWifiEnabled(true);
+        if (!wifi.isWifiEnabled()) {
+            wifi.setWifiEnabled(true);
+        }
+        mmint.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+
+        spinner = (ProgressBar) findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
+        closePopupBtn = (Button) findViewById(R.id.passwordBtn);
+        forgetPopupBtn=findViewById(R.id.forgetPopupBtn);
+        wifiRecyclerView = findViewById(R.id.wifiRv);
+        forgetPopupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                wifiConnector.removeWifiNetwork(wifiConnector.getCurrentWifiSSID(),"");
+                adapter.notifyDataSetChanged();
             }
-            mmint.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        });
+        closePopupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(WifiActivity.this, MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
 
-            spinner = (ProgressBar) findViewById(R.id.progressBar);
-            spinner.setVisibility(View.VISIBLE);
-            closePopupBtn = (Button) findViewById(R.id.passwordBtn);
-            wifiRecyclerView = findViewById(R.id.wifiRv);
+        onWifiEnabled();
 
-            closePopupBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(WifiActivity.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            });
+        adapter = new WifiListRvAdapter(wifiConnector, wifiManager, new WifiListRvAdapter.WifiItemListener() {
+            @Override
+            public void onWifiItemClicked(ScanResult scanResult) {
+                openConnectDialog(scanResult);
+            }
 
-            onWifiEnabled();
+            @Override
+            public void onWifiItemLongClick(ScanResult scanResult) {
 
-            adapter = new WifiListRvAdapter(wifiConnector, wifiManager, new WifiListRvAdapter.WifiItemListener() {
-                @Override
-                public void onWifiItemClicked(ScanResult scanResult) {
-                    openConnectDialog(scanResult);
-                }
+            }
+        });
 
-                @Override
-                public void onWifiItemLongClick(ScanResult scanResult) {
-                    disconnectFromAccessPoint(scanResult);
-                }
-            });
-
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
-            wifiRecyclerView.setLayoutManager(layoutManager);
-            wifiRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            wifiRecyclerView.setAdapter(adapter);
-            wifiRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getBaseContext());
+        wifiRecyclerView.setLayoutManager(layoutManager);
+        wifiRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        wifiRecyclerView.setAdapter(adapter);
+        wifiRecyclerView.setHasFixedSize(true);
 
 
 

@@ -54,7 +54,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity /*implements WifiConnectorModel*/ {
-
     Button settingsButton, show_popup, closePopupBtn, enableButton1, disableButton1;
     WifiP2pManager mManager;
     ProgressBar spinner;
@@ -87,7 +86,8 @@ public class MainActivity extends AppCompatActivity /*implements WifiConnectorMo
     int f = 0;
     LinearLayout linearLayout1;
     SharedPreferences sp;
-CountDownTimer ctimer;
+    CountDownTimer ctimer;
+    public static String networkName,networkPassword;
     //
 //    @Override
 //    public void onItemClick(int position) {
@@ -304,118 +304,130 @@ CountDownTimer ctimer;
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, MainActivity.this);
 
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
-                        public void onGroupInfoAvailable(final WifiP2pGroup group) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+                    public void onGroupInfoAvailable(final WifiP2pGroup group) {
 
-                            if (group != null) {
+                        if (group != null) {
 
-                                mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
-                                    @Override
-                                    public void onSuccess() {
-                                        mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
-                                            @Override
-                                            public void onSuccess() {
-                                                Log.d("success", "first");
-                                                Log.d("ssid1", "" + group.getNetworkName());
-                                                Log.d("password1", "" + group.getPassphrase());
-                                                s = sp.getString("ssid", "0");
-                                                p = sp.getString("pass", "0");
+                            mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
+                                @Override
+                                public void onSuccess() {
+                                    mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            Log.d("success", "first");
+                                            Log.d("ssid1", "" + group.getNetworkName());
+                                            Log.d("password1", "" + group.getPassphrase());
+                                            proxyThread.start();
+                                            flag=1;
+                                            networkName=group.getNetworkName();
+                                            networkPassword=group.getPassphrase();
+                                            s = sp.getString("ssid", "0");
+                                            p = sp.getString("pass", "0");
 
-                                                proxyThread.start();
+                                            proxyThread.start();
 
-                                                flag = 1;
+                                            flag = 1;
 
-                                                if (s.equals("0")) {
-                                                    Editor edi = sp.edit();
-                                                    edi.putString("ssid", "" + group.getNetworkName());
-                                                    edi.putString("pass", "" + group.getPassphrase());
-                                                    edi.apply();
-                                                    ssi.setText("SSID :- " + group.getNetworkName());
-                                                    pas.setText("Password :- " + group.getPassphrase());
-                                                }
+                                            if (s.equals("0")) {
+                                                Editor edi = sp.edit();
+                                                edi.putString("ssid", "" + group.getNetworkName());
+                                                edi.putString("pass", "" + group.getPassphrase());
+                                                edi.apply();
+                                                ssi.setText("SSID :- " + group.getNetworkName());
+                                                pas.setText("Password :- " + group.getPassphrase());
                                             }
+                                        }
 
-                                            @Override
-                                            public void onFailure(int reason) {
-                                                Log.d("first", "" + reason);
-                                            }
-                                        });
-                                    }
+                                        @Override
+                                        public void onFailure(int reason) {
+                                            Log.d("first", "" + reason);
+                                        }
+                                    });
+                                }
 
-                                    @Override
-                                    public void onFailure(int reason) {
-                                        Log.d("second", "" + reason);
-                                    }
-                                });
-                            } else {
+                                @Override
+                                public void onFailure(int reason) {
+                                    Log.d("second", "" + reason);
+                                }
+                            });
+                        } else {
 
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
-                                            @SuppressLint("Assert")
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
+                                        @SuppressLint("Assert")
 
-                                            @Override
-                                            public void onSuccess() {
-                                                new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
-                                                            public void onGroupInfoAvailable(final WifiP2pGroup group) {
+                                        @Override
+                                        public void onSuccess() {
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+                                                        public void onGroupInfoAvailable(final WifiP2pGroup group) {
 
-                                                                Log.d("success", "third");
-                                                                Log.d("ssid1", "" + group.getNetworkName());
-                                                                Log.d("password1", "" + group.getPassphrase());
-                                                                s = sp.getString("ssid", "0");
-                                                                p = sp.getString("pass", "0");
+                                                            Log.d("success", "third");
+                                                            Log.d("ssid1", "" + group.getNetworkName());
 
-                                                                proxyThread.start();
-                                                                flag = 1;
+                                                            Log.d("password1", "" + group.getPassphrase());
+                                                            proxyThread.start();
+                                                            flag=1;
+                                                            networkName=group.getNetworkName();
+                                                            networkPassword=group.getPassphrase();
 
-                                                                if (s.equals("0")) {
-                                                                    Editor edi = sp.edit();
-                                                                    edi.putString("ssid", "" + group.getNetworkName());
-                                                                    edi.putString("pass", "" + group.getPassphrase());
-                                                                    edi.apply();
-                                                                    ssi.setText("SSID :- " + group.getNetworkName());
-                                                                    pas.setText("Password :- " + group.getPassphrase());
-                                                                }
+                                                            s = sp.getString("ssid", "0");
+                                                            p = sp.getString("pass", "0");
 
+                                                            proxyThread.start();
+                                                            flag = 1;
+
+                                                            if (s.equals("0")) {
+                                                                Editor edi = sp.edit();
+                                                                edi.putString("ssid", "" + group.getNetworkName());
+                                                                edi.putString("pass", "" + group.getPassphrase());
+                                                                edi.apply();
+                                                                ssi.setText("SSID :- " + group.getNetworkName());
+                                                                pas.setText("Password :- " + group.getPassphrase());
                                                             }
-                                                        });
-                                                    }
 
-                                                }, 2000);
+                                                        }
+                                                    });
+                                                }
+
+                                            }, 2000);
 
 
-                                            }
+                                        }
 
-                                            @Override
-                                            public void onFailure(int reason) {
-                                                Toast.makeText(getApplicationContext(), "Not Created", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                        @Override
+                                        public void onFailure(int reason) {
+                                            Toast.makeText(getApplicationContext(), "Not Created", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
 
-                                    }
-                                }, 1000);
-
-                            }
-
+                                }
+                            }, 1000);
 
                         }
-                    });
 
-                }
-            }, 1000);
+
+                    }
+                });
+
+            }
+        }, 1000);
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+
 
 
 //        if (flag == 0) {
