@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,8 +40,10 @@ public class SettingsActivity extends AppCompatActivity {
         alert.setTitle("Enter Password");
         alert.setCancelable(false);
 
+
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT| InputType.TYPE_TEXT_VARIATION_PASSWORD);
         alert.setView(input);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
