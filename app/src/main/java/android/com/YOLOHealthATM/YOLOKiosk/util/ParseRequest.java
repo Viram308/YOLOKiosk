@@ -1,9 +1,5 @@
 package android.com.YOLOHealthATM.YOLOKiosk.util;
 
-/**
- * @author shinilms
- */
-
 public final class ParseRequest {
 
     public boolean flag = true;

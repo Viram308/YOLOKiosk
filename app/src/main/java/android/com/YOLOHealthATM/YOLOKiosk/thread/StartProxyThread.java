@@ -5,12 +5,6 @@ import android.com.YOLOHealthATM.YOLOKiosk.util.Constants;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-
-
-/**
- * @author shinilms
- */
-
 public final class StartProxyThread extends Thread {
 
     private ServerSocket serverSocket;

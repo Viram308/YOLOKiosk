@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -13,7 +14,6 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -26,6 +26,7 @@ import java.util.Collection;
  * Created by Viram on 5/13/2019.
  */
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
+    SharedPreferences sp;
     class Node {
         String ip;
 
@@ -47,7 +48,8 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     private boolean isWifiP2pEnabled;
     String host;
     ArrayList<Node> listNote = new ArrayList<>();
-String textResult;
+    String textResult;
+
     public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
                                        Activity activity) {
         super();
@@ -57,7 +59,7 @@ String textResult;
         this.isWifiP2pEnabled = false;
     }
 
-    private void readAddresses(String host,Context context) {
+    private void readAddresses(String host) {
 
         BufferedReader bufferedReader = null;
 
@@ -66,14 +68,13 @@ String textResult;
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                Log.d("LINE",""+line.toString());
-
                 String[] splitted = line.split(" +");
+                Log.d("line", "" + line);
                 if (splitted.length >= 4) {
                     String ip = splitted[0];
                     String mac = splitted[3];
-                    Log.d("mac",""+ip);
-                    Log.d("mac",""+mac);
+                    Log.d("mac", "" + ip);
+                    Log.d("mac", "" + mac);
                     if (mac.equals(host)) {
 
                         Node thisNode = new Node(ip);
@@ -83,16 +84,18 @@ String textResult;
             }
 
         } catch (FileNotFoundException e) {
+            Log.d("jj", "jj");
             e.printStackTrace();
         } catch (IOException e) {
+            Log.d("jj", "jj");
             e.printStackTrace();
-        } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        }//         finally {
+//            try {
+//                bufferedReader.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Override
@@ -116,61 +119,82 @@ String textResult;
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
+            textResult = "";
+            listNote.clear();
+            mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
+
+                @Override
+                public void onConnectionInfoAvailable(final WifiP2pInfo info) {
+                    if (info.isGroupOwner) {
+                        mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+
+                            @Override
+                            public void onGroupInfoAvailable(WifiP2pGroup group) {
+                                //This is the size you want
+                                Collection<WifiP2pDevice> peerList = group.getClientList();
+
+                                ArrayList<WifiP2pDevice> list = new ArrayList<WifiP2pDevice>(peerList);
+
+                                int i;
+                                for (i = 0; i < list.size(); i = i + 1) {
+                                    host = list.get(i).deviceAddress;
+                                    Log.d("hostmac", "" + host);
+                                    Log.d("hostmac", "" + host+"Name : - "+list.get(i).deviceName);
+                                }
 
 
-                    mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
-
-                        @Override
-                        public void onConnectionInfoAvailable(final WifiP2pInfo info) {
-                            if (info.isGroupOwner) {
-                                mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
-
+                                new Handler().postDelayed(new Runnable() {
                                     @Override
-                                    public void onGroupInfoAvailable(WifiP2pGroup group) {
-                                        //This is the size you want
-                                        Collection<WifiP2pDevice> peerList = group.getClientList();
+                                    public void run() {
 
-                                        ArrayList<WifiP2pDevice> list = new ArrayList<WifiP2pDevice>(peerList);
-
-                                        int i;
-                                        for (i = 0; i < list.size(); i = i + 1) {
-                                            host = list.get(i).deviceAddress;
-
-                                            Log.d("hostmac", "" + host);
+                                        Log.d("hostmac", "" + host);
+                                        sp=context.getSharedPreferences("Mac",Context.MODE_PRIVATE);
+                                        String s=sp.getString("hostMac","");
+                                        if(s.equals(""))
+                                        {
+                                            SharedPreferences.Editor editor=sp.edit();
+                                            editor.putString("hostMac",host);
+                                            editor.apply();
+                                            readAddresses(host);
                                         }
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                readAddresses(host,context);
-                                                textResult = "";
-                                                int j;
-                                                for (j = 0; j < listNote.size(); j++) {
+                                        else{
+                                            readAddresses(s);
+                                        }
 
-                                                    textResult = listNote.get(j).toString();
 
-                                                }
-                                                Log.d("ip", "" + textResult);
-                                                if (!textResult.equals("")) {
+                                        textResult = "";
+                                        int j;
+                                        for (j = 0; j < listNote.size(); j++) {
+
+                                            textResult = listNote.get(j).toString();
+
+                                        }
+                                        Log.d("ip", "" + textResult);
+                                        if (!textResult.equals("")) {
 //                                                    do {
 //                                                        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 //                                                        connected[0] = activeNetworkInfo != null && activeNetworkInfo.isConnected();
 //                                                    } while (!connected[0]);
-                                                    Intent intent = new Intent(context, Webvie.class);
-                                                    intent.putExtra("ip", textResult);
-                                                    context.startActivity(intent);
-                                                }
-                                            }
-                                        }, 1000);
 
 
+                                            Intent intent = new Intent(context, Webvie.class);
+                                            intent.putExtra("ip", textResult);
+                                            context.startActivity(intent);
+
+
+                                        }
                                     }
-                                });
-                            }
-                        }
-                    });
+                                }, 2500);
 
-                // Connection state changed! We should probably do something about
-                // that.
+                            }
+                        });
+                    }
+                }
+
+            });
+
+            // Connection state changed! We should probably do something about
+            // that.
 
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {

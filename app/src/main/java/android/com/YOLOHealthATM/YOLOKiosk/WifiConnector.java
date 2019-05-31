@@ -528,6 +528,7 @@ public class WifiConnector {
     }
 
     // TODO show reason to remove failure!
+
     public void removeWifiNetwork(String SSID, String BSSID) {
         Log.d("info","SSID :- "+SSID+"cureent"+getCurrentWifiSSID());
         List<WifiConfiguration> list1 = wifiManager.getConfiguredNetworks();
@@ -538,8 +539,9 @@ public class WifiConnector {
                 try {
                     Log.d("info","SSID :- "+i.SSID+"cureent");
 
-                        wifiManager.removeNetwork(wifiManager.getConnectionInfo().getNetworkId());
+                        wifiManager.removeNetwork(i.networkId);
                         wifiManager.saveConfiguration();
+
 
                 } catch (NullPointerException e) {
                     wifiLog("Exception on removing wifi network: " + e.toString());
@@ -547,7 +549,7 @@ public class WifiConnector {
             }
         } else {
             wifiLog("Empty Wifi List");
-            removeWifiListener.onWifiNetworkRemoveError();
+
         }
     }
 
