@@ -54,7 +54,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity /*implements WifiConnectorModel*/ {
-    Button show_popup, closePopupBtn, enableButton1, disableButton1;
+
+    Button settingsButton, show_popup, closePopupBtn, enableButton1, disableButton1;
     WifiP2pManager mManager;
     ProgressBar spinner;
     WifiManager wifiManager;
@@ -238,6 +239,16 @@ CountDownTimer ctimer;
                 Intent i = new Intent(MainActivity.this, WifiActivity.class);
                 startActivity(i);
 
+            }
+        });
+
+        settingsButton = findViewById(R.id.settingsBtn);
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(i);
             }
         });
 
