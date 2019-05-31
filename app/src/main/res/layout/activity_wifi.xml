@@ -93,7 +93,7 @@
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:layout_gravity="center"
-            android:id="@+id/closePopupBtn"/>
+            android:id="@+id/passwordBtn"/>
 
     </LinearLayout>
 

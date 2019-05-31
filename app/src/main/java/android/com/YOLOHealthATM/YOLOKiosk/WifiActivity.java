@@ -28,13 +28,10 @@ import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,8 +41,6 @@ import org.json.JSONArray;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
-
-import static android.com.YOLOHealthATM.YOLOKiosk.MainActivity.myprefs;
 
 public class WifiActivity extends AppCompatActivity implements WifiConnectorModel {
 
@@ -326,7 +321,7 @@ public class WifiActivity extends AppCompatActivity implements WifiConnectorMode
 
             spinner = (ProgressBar) findViewById(R.id.progressBar);
             spinner.setVisibility(View.VISIBLE);
-            closePopupBtn = (Button) findViewById(R.id.closePopupBtn);
+            closePopupBtn = (Button) findViewById(R.id.passwordBtn);
             wifiRecyclerView = findViewById(R.id.wifiRv);
 
             closePopupBtn.setOnClickListener(new View.OnClickListener() {
