@@ -132,14 +132,14 @@ public class MainActivity extends AppCompatActivity /*implements WifiConnectorMo
                                             Log.d("success", "first");
                                             Log.d("ssid1", "" + group.getNetworkName());
                                             Log.d("password1", "" + group.getPassphrase());
+
                                             proxyThread.start();
+
                                             flag = 1;
                                             networkName = group.getNetworkName();
                                             networkPassword = group.getPassphrase();
                                             s = sp.getString("ssid", "0");
                                             p = sp.getString("pass", "0");
-
-                                            proxyThread.start();
 
                                             flag = 1;
 
@@ -195,7 +195,6 @@ public class MainActivity extends AppCompatActivity /*implements WifiConnectorMo
                                                             s = sp.getString("ssid", "0");
                                                             p = sp.getString("pass", "0");
 
-                                                            proxyThread.start();
                                                             flag = 1;
 
                                                             if (s.equals("0")) {

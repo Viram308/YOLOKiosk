@@ -4,22 +4,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.Layout;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-
-import java.net.PasswordAuthentication;
 
 import static android.com.YOLOHealthATM.YOLOKiosk.MainActivity.myprefs;
 
@@ -39,7 +30,6 @@ public class SettingsActivity extends AppCompatActivity {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Enter Password");
         alert.setCancelable(false);
-
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
@@ -76,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(myprefs, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("hostMac", "");
+                editor.clear();
                 editor.commit();
 
                 Intent i = new Intent(SettingsActivity.this, MainActivity.class);
