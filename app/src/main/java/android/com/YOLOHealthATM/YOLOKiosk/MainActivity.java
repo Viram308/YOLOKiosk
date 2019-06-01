@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
         mChannel = mManager.initialize(this, getMainLooper(), null);
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, MainActivity.this);
 
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

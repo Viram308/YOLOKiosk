@@ -9,44 +9,52 @@
     android:layout_gravity="center"
     tools:context=".WifiActivity">
 
-    <TextView android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textColor="#0066cc"
-        android:text="Connecting..."
-        android:visibility="invisible"
-        android:id="@+id/wstatus"/>
-
     <LinearLayout
-        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/shape"
         android:layout_width="match_parent"
-        android:layout_marginBottom="20dp">
-        <TextView
+        android:layout_height="wrap_content">
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="#0066cc"
+            android:text="Connecting..."
+            android:visibility="invisible"
+            android:id="@+id/wstatus"/>
+
+        <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:text="Wi-Fi"
-            android:layout_margin="12dp"
-            android:textSize="18sp"
-            android:gravity="center" />
-        <TextView
-            android:layout_margin="12dp"
-            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:text="Wi-Fi"
+                android:textColor="@android:color/black"
+                android:layout_margin="12dp"
+                android:textSize="24sp"
+                android:gravity="center" />
+            <TextView
+                android:layout_margin="12dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:text="Strength"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:text="Strength"
-            android:gravity="center" />
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="#C7C6C4"/>
     </LinearLayout>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_margin="10dp"
-        android:background="#C7C6C4"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -79,6 +87,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Forget All"
+            android:background="#0066CC"
+            android:textColor="@android:color/white"
             android:gravity="center"
             android:layout_weight="1"
             android:layout_margin="10dp"
@@ -89,6 +99,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Close"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_red_light"
             android:gravity="center"
             android:layout_weight="1"
             android:layout_margin="10dp"
