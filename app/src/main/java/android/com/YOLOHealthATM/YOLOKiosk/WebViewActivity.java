@@ -1,12 +1,17 @@
 package android.com.YOLOHealthATM.YOLOKiosk;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
@@ -35,11 +40,15 @@ public class WebViewActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
         // Remember that you should never show the action bar if the
         // status bar is hidden, so hide that too if necessary.
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.MODIFY_AUDIO_SETTINGS) != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS}, 0);
+        }
 
         WebView.setWebContentsDebuggingEnabled(true);
         mWebView = findViewById(R.id.activity_main_webview);
-        String ip = getIntent().getStringExtra("ip");
-        Toast.makeText(getApplicationContext(), "" + ip, Toast.LENGTH_SHORT).show();
+        String ip= getIntent().getStringExtra("ip");
+        Toast.makeText(getApplicationContext(),""+ip,Toast.LENGTH_SHORT).show();
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -54,13 +63,20 @@ public class WebViewActivity extends AppCompatActivity {
         settings.setAllowFileAccessFromFileURLs(true); //Maybe you don't need this rule
         settings.setAllowUniversalAccessFromFileURLs(true);
         mWebView.setWebViewClient(new MyWebViewClient());
-        mWebView.setWebChromeClient(new WebChromeClient());
-        String url = "https://" + ip + ":8080";
+        mWebView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onPermissionRequest(PermissionRequest request) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    request.grant(request.getResources());
+                }
+            }
+        });
+        String url = "https://"+ip+":8080";
         mWebView.loadUrl(url);
 
     }
-
     private class MyWebViewClient extends WebViewClient {
+
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             handler.proceed(); // Ignore SSL certificate errors
@@ -73,7 +89,7 @@ public class WebViewActivity extends AppCompatActivity {
         }
 
         @Override
-        public WebResourceResponse shouldInterceptRequest(final WebView view, String url) {
+        public WebResourceResponse shouldInterceptRequest (final WebView view, String url) {
             if (url.contains(".css")) {
                 return getCssWebResourceResponseFromAsset();
             } else {
@@ -94,7 +110,6 @@ public class WebViewActivity extends AppCompatActivity {
         }
 
     }
-
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
@@ -110,9 +125,8 @@ public class WebViewActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce = false;
+                doubleBackToExitPressedOnce=false;
             }
         }, 2000);
     }
-
 }

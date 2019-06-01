@@ -171,7 +171,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                                             context.startActivity(intent);
                                         }
                                     }
-                                }, 2500);
+                                }, 1000);
                             }
                         });
                     }

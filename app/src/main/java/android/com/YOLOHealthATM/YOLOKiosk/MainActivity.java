@@ -203,6 +203,9 @@ public class MainActivity extends AppCompatActivity {
                                                                 edi.apply();
                                                                 ssi.setText("SSID :- " + group.getNetworkName());
                                                                 pas.setText("Password :- " + group.getPassphrase());
+                                                            } else {
+                                                                ssi.setText("");
+                                                                pas.setText("");
                                                             }
                                                         }
                                                     });
@@ -222,14 +225,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        }, 1000);
+        }, 4000);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        ctimer = new CountDownTimer(5000, 1000) {
+        ctimer = new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long l) {
                 Log.d("tick", "1");
@@ -248,6 +251,8 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         ctimer.cancel();
+        ssi.setText("");
+        pas.setText("");
         if (ff == 1) {
             unregisterReceiver(mReceiver);
             ff = 0;
