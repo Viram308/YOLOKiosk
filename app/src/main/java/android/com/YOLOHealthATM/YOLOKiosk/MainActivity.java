@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        }, 4000);
+        }, 5500);
     }
 
     @Override

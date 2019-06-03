@@ -80,9 +80,11 @@
             android:layout_height="wrap_content"
             android:text="Forget All"
             android:gravity="center"
+            android:textColor="#ffffff"
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:layout_gravity="center"
+            android:background="#0066cc"
             android:id="@+id/forgetPopupBtn"/>
 
         <Button
@@ -91,6 +93,8 @@
             android:text="Close"
             android:gravity="center"
             android:layout_weight="1"
+            android:textColor="#ffffff"
+        android:background="@android:color/holo_red_light"
             android:layout_margin="10dp"
             android:layout_gravity="center"
             android:id="@+id/passwordBtn"/>
