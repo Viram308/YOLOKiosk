@@ -162,32 +162,21 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
                                         int j;
 
-                                        String ss=sp.getString("ip","");
-
-                                        if(ss.equals("")) {
                                             for (j = 0; j < listNote.size(); j++) {
 
                                                 textResult = listNote.get(j).toString();
 
                                             }
+
                                             if (!textResult.equals("")) {
                                                 Log.d("ip", "" + textResult);
-                                                SharedPreferences.Editor editor = sp.edit();
-                                                editor.putString("ip", textResult);
-                                                editor.commit();
+
                                                 Intent intent = new Intent(context, WebViewActivity.class);
                                                 intent.putExtra("ip", textResult);
                                                 context.startActivity(intent);
                                             }
                                         }
-                                        else{
-                                            Intent intent = new Intent(context, WebViewActivity.class);
-                                            intent.putExtra("ip", ss);
-                                            context.startActivity(intent);
-                                        }
-                                        Log.d("ip", "" + textResult);
 
-                                    }
                                 }, 2000);
                             }
                         });
