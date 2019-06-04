@@ -44,7 +44,8 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
     private boolean isWifiP2pEnabled;
     String host;
     ArrayList<Node> listNote = new ArrayList<>();
-    String textResult;
+    String textResult,ss;
+    static int g=0;
 
     public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
                                        Activity activity) {
@@ -137,14 +138,15 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                                     Log.d("hostmac", "" + host);
                                     Log.d("hostmac", "" + host + "Name : - " + list.get(i).deviceName);
                                 }
+                                sp = context.getSharedPreferences(myprefs, Context.MODE_PRIVATE);
 
-
+                                ss=sp.getString("ip","");
+                                textResult = "";
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
 
                                         Log.d("hostmac", "" + host);
-                                        sp = context.getSharedPreferences(myprefs, Context.MODE_PRIVATE);
                                         String s = sp.getString("hostMac", "");
                                         Log.d("PRINT S ", s);
                                         if (s.equals("")) {
@@ -157,21 +159,36 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                                         }
 
 
-                                        textResult = "";
+
                                         int j;
-                                        for (j = 0; j < listNote.size(); j++) {
 
-                                            textResult = listNote.get(j).toString();
+                                        String ss=sp.getString("ip","");
 
+                                        if(ss.equals("")) {
+                                            for (j = 0; j < listNote.size(); j++) {
+
+                                                textResult = listNote.get(j).toString();
+
+                                            }
+                                            if (!textResult.equals("")) {
+                                                Log.d("ip", "" + textResult);
+                                                SharedPreferences.Editor editor = sp.edit();
+                                                editor.putString("ip", textResult);
+                                                editor.commit();
+                                                Intent intent = new Intent(context, WebViewActivity.class);
+                                                intent.putExtra("ip", textResult);
+                                                context.startActivity(intent);
+                                            }
                                         }
-                                        Log.d("ip", "" + textResult);
-                                        if (!textResult.equals("")) {
+                                        else{
                                             Intent intent = new Intent(context, WebViewActivity.class);
-                                            intent.putExtra("ip", textResult);
+                                            intent.putExtra("ip", ss);
                                             context.startActivity(intent);
                                         }
+                                        Log.d("ip", "" + textResult);
+
                                     }
-                                }, 1000);
+                                }, 2000);
                             }
                         });
                     }

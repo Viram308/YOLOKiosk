@@ -44,7 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
                 } else {
                     Intent i = new Intent(SettingsActivity.this, MainActivity.class);
                     startActivity(i);
-                    finish();
+//                    finish();
                 }
             }
         });
@@ -54,7 +54,7 @@ public class SettingsActivity extends AppCompatActivity {
                 // Canceled.
                 Intent i = new Intent(SettingsActivity.this, MainActivity.class);
                 startActivity(i);
-                finish();
+//                finish();
             }
         });
 
@@ -66,7 +66,8 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(myprefs, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
+                editor.putString("hostMac", "");
+                editor.putString("ip","");
                 editor.commit();
 
                 Intent i = new Intent(SettingsActivity.this, MainActivity.class);

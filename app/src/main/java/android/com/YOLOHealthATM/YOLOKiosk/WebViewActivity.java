@@ -2,6 +2,7 @@ package android.com.YOLOHealthATM.YOLOKiosk;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.net.http.SslError;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.PermissionRequest;
@@ -54,26 +56,40 @@ public class WebViewActivity extends AppCompatActivity {
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
         settings.setAppCacheEnabled(false);
+
+        settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-
+        mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
         settings.setAllowFileAccessFromFileURLs(true); //Maybe you don't need this rule
         settings.setAllowUniversalAccessFromFileURLs(true);
         mWebView.setWebViewClient(new MyWebViewClient());
-        mWebView.setWebChromeClient(new WebChromeClient(){
-            @Override
-            public void onPermissionRequest(PermissionRequest request) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    request.grant(request.getResources());
-                }
-            }
-        });
-        String url = "https://"+ip+":8080";
-        mWebView.loadUrl(url);
 
+        mWebView.setWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public void onPermissionRequest(final PermissionRequest request) {
+                Log.d("kkk", "onPermissionRequest");
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if(request.getOrigin().toString().equals("https://apprtc-m.appspot.com/")) {
+                            request.grant(request.getResources());
+                        } else {
+                            request.deny();
+                        }
+                    }
+                });
+            }
+
+        });        String url = "https://"+ip+":8080";
+        if(!ip.equals("")) {
+            mWebView.loadUrl(url);
+        }
     }
     private class MyWebViewClient extends WebViewClient {
 

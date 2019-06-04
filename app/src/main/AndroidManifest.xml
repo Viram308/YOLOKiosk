@@ -6,6 +6,7 @@
     <uses-feature android:name="android.hardware.wifi.direct" />
     <uses-feature android:name="android.hardware.camera"
         android:required="true"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
