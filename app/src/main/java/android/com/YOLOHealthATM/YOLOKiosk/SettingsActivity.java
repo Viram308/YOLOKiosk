@@ -11,20 +11,23 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import static android.com.YOLOHealthATM.YOLOKiosk.MainActivity.myprefs;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String PASSWORD = "password";
-
+    String s,p;
+    TextView ssi,pas;
     Button sharedPrefButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
+        ssi=findViewById(R.id.groupssid);
+        pas=findViewById(R.id.grouppass);
         sharedPrefButton = findViewById(R.id.sharedPref);
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -57,14 +60,21 @@ public class SettingsActivity extends AppCompatActivity {
 //                finish();
             }
         });
-
         alert.show();
-
-
+        final SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(myprefs, Context.MODE_PRIVATE);
+        s = sharedPreferences.getString("ssid", "0");
+        p = sharedPreferences.getString("pass", "0");
+        if (s.equals("0")) {
+            ssi.setText("");
+            pas.setText("");
+        } else {
+            ssi.setText(s);
+            pas.setText(p);
+        }
         sharedPrefButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(myprefs, Context.MODE_PRIVATE);
+
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("hostMac", "");
                 editor.putString("ip","");

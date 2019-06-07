@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
                                                 edi.putString("ssid", "" + group.getNetworkName());
                                                 edi.putString("pass", "" + group.getPassphrase());
                                                 edi.apply();
-                                                ssi.setText("SSID :- " + group.getNetworkName());
-                                                pas.setText("Password :- " + group.getPassphrase());
+//                                                ssi.setText("SSID :- " + group.getNetworkName());
+//                                                pas.setText("Password :- " + group.getPassphrase());
                                             } else {
                                                 ssi.setText("");
                                                 pas.setText("");
@@ -196,15 +197,15 @@ public class MainActivity extends AppCompatActivity {
                                                             s = sp.getString("ssid", "0");
                                                             p = sp.getString("pass", "0");
 
-                                                            flag = 1;
+
 
                                                             if (s.equals("0")) {
                                                                 Editor edi = sp.edit();
                                                                 edi.putString("ssid", "" + group.getNetworkName());
                                                                 edi.putString("pass", "" + group.getPassphrase());
                                                                 edi.apply();
-                                                                ssi.setText("SSID :- " + group.getNetworkName());
-                                                                pas.setText("Password :- " + group.getPassphrase());
+//                                                                ssi.setText("SSID :- " + group.getNetworkName());
+//                                                                pas.setText("Password :- " + group.getPassphrase());
                                                             } else {
                                                                 ssi.setText("");
                                                                 pas.setText("");

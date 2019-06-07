@@ -16,6 +16,8 @@ import android.webkit.CookieManager;
 import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -27,7 +29,7 @@ import java.io.IOException;
 
 public class WebViewActivity extends AppCompatActivity {
     WebView mWebView;
-
+String url;
     boolean doubleBackToExitPressedOnce = false;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -50,7 +52,7 @@ public class WebViewActivity extends AppCompatActivity {
         WebView.setWebContentsDebuggingEnabled(true);
         mWebView = findViewById(R.id.activity_main_webview);
         String ip= getIntent().getStringExtra("ip");
-        Toast.makeText(getApplicationContext(),""+ip,Toast.LENGTH_SHORT).show();
+         Toast.makeText(getApplicationContext(),""+ip,Toast.LENGTH_SHORT).show();
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -86,7 +88,7 @@ public class WebViewActivity extends AppCompatActivity {
                 });
             }
 
-        });        String url = "https://"+ip+":8080";
+        });         url = "https://"+ip+":8080";
         if(!ip.equals("")) {
             mWebView.loadUrl(url);
         }
@@ -96,6 +98,18 @@ public class WebViewActivity extends AppCompatActivity {
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             handler.proceed(); // Ignore SSL certificate errors
+        }
+
+        @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            super.onReceivedHttpError(view, request, errorResponse);
+            Toast.makeText(WebViewActivity.this,"Error HTTP",Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+
         }
 
         @Override

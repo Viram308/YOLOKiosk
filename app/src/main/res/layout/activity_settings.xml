@@ -20,5 +20,26 @@
         android:text="Clear Shared Preference"
         android:layout_gravity="center"
         android:gravity="center"/>
-
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:visibility="visible"
+        android:textColor="#0066cc"
+        android:text=""
+        android:id="@+id/groupssid"/>
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/ssid"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:visibility="visible"
+        android:textColor="#0066cc"
+        android:text=""
+        android:id="@+id/grouppass"/>
 </LinearLayout>
