@@ -18,6 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Clear Shared Preference"
+        android:visibility="invisible"
         android:layout_gravity="center"
         android:gravity="center"/>
     <TextView
@@ -27,7 +28,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:textSize="20sp"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:textColor="#0066cc"
         android:text=""
         android:id="@+id/groupssid"/>
@@ -38,8 +39,21 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:textSize="20sp"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:textColor="#0066cc"
         android:text=""
         android:id="@+id/grouppass"/>
+
+    <Button
+        android:id="@+id/kioskModeBtn"
+        android:background="@android:color/holo_red_dark"
+        android:textColor="#ffffff"
+        android:padding="12dp"
+        android:layout_margin="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Off Kiosk Mode"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:gravity="center"/>
 </LinearLayout>
